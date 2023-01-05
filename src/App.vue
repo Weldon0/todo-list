@@ -1,9 +1,20 @@
 <template>
   <section class="todoapp">
     <TodoHeader @add="add" />
-    <TodoMain :list="list" @del="del" @changeIsDone="changeIsDone" />
+    <TodoMain
+      :type="type"
+      :list="list"
+      @del="del"
+      @changeIsDone="changeIsDone"
+    />
     <!--只有list列表有内容的时候才展示footer组件-->
-    <TodoFooter @clearDone="clearDone" :list="list" v-if="list.length" />
+    <TodoFooter
+      :type="type"
+      @clearDone="clearDone"
+      @filterType="filterType"
+      :list="list"
+      v-if="list.length"
+    />
   </section>
 </template>
 
@@ -18,6 +29,7 @@ export default {
   components: { TodoFooter, TodoMain, TodoHeader },
   data() {
     return {
+      type: "all", // 把子组件footer里面的变量提升到了父组件App.vue
       list: [
         { id: 1, name: "吃饭", isDone: true },
         { id: 2, name: "睡觉", isDone: false },
@@ -26,6 +38,10 @@ export default {
     };
   },
   methods: {
+    filterType(type) {
+      // 子组件不能直接修改父组件传递过来的基本值
+      this.type = type;
+    },
     /**
      * 清除已经完成的list项
      * @param {MouseEvent} e

@@ -53,6 +53,9 @@ export default {
       type: Array,
       required: true,
     },
+    type: {
+      type: String, // 指定父组件传递过来的type属性的类型
+    },
   },
   computed: {
     leftCount() {
@@ -69,16 +72,18 @@ export default {
   },
   methods: {
     clearDone() {
-      //   触发父组件的清楚方法
+      //   触发父组件的清除方法
       this.$emit("clearDone");
     },
     filterType(type) {
-      this.type = type;
+      // 子组件不能直接修改父组件传递过来的基本值
+      // this.type = type;
+      this.$emit("filterType", type);
     },
   },
   data() {
     return {
-      type: "all", // 默认选中所有
+      // type: "all", // 默认选中所有
     };
   },
 };

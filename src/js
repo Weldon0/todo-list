@@ -1,0 +1,5 @@
+const typeMap = {
+    active: item => item.isDone,
+    completed: item => !item.isDone,
+    all: item => true
+}
