@@ -2,6 +2,7 @@
   <section class="todoapp">
     <TodoHeader @add="add" />
     <TodoMain
+      @toggleAll="toggleAll"
       :type="type"
       :list="list"
       @del="del"
@@ -30,14 +31,28 @@ export default {
   data() {
     return {
       type: "all", // 把子组件footer里面的变量提升到了父组件App.vue
-      list: [
-        { id: 1, name: "吃饭", isDone: true },
-        { id: 2, name: "睡觉", isDone: false },
-        { id: 3, name: "打豆豆", isDone: true },
-      ],
+      list: JSON.parse(localStorage.getItem("todo")) || [],
     };
   },
+  watch: {
+    list: {
+      handler(newList) {
+        // 已经可以拿到变化之后的最新的值，存储到本地存储
+        localStorage.setItem("todo", JSON.stringify(newList));
+      },
+      deep: true, // 开启深度监听
+    },
+  },
   methods: {
+    /**
+     * 点击全选按钮，切换所有子项的状态
+     * @param {Boolean} status  全选框最新的状态
+     */
+    toggleAll(status) {
+      this.list.forEach((item) => {
+        item.isDone = status;
+      });
+    },
     filterType(type) {
       // 子组件不能直接修改父组件传递过来的基本值
       this.type = type;

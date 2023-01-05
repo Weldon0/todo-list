@@ -1,7 +1,12 @@
 <template>
   <!-- 主体部分 -->
   <section class="main">
-    <input id="toggle-all" class="toggle-all" type="checkbox" />
+    <input
+      id="toggle-all"
+      class="toggle-all"
+      type="checkbox"
+      v-model="isCheckAll"
+    />
     <label for="toggle-all">Mark all as complete</label>
     <ul class="todo-list">
       <!-- 当任务已完成，可以给 li 加上 completed 类，会让元素加上删除线 -->
@@ -24,7 +29,6 @@
     </ul>
   </section>
 </template>
-
 <script>
 export default {
   props: {
@@ -47,6 +51,21 @@ export default {
       }
       // 如果上面两个条件都没有匹配到，证明是all，返回所有数据
       return this.list;
+    },
+    isCheckAll: {
+      get() {
+        // 判断是不是所有的数据全部都被选中
+        // 每一项的isDone属性为true
+        return this.list.every((item) => item.isDone);
+      },
+      /**
+       * 修改isCheckAll属性触发的方法
+       * @param {Boolean} newValue 全选框切换之后的最新的值
+       */
+      set(newValue) {
+        // 触发父组件用于修改的toggleAll方法
+        this.$emit("toggleAll", newValue);
+      },
     },
   },
   methods: {
